@@ -1,0 +1,35 @@
+{
+  "name": "upload-google-play",
+  "version": "1.0.17",
+  "private": true,
+  "description": "Upload an Android release (.apk or .aab) to Google Play Console",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "ncc build src/main.ts -m -o lib/",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/r0adkll/upload-google-play.git"
+  },
+  "keywords": [
+    "actions",
+    "node",
+    "setup"
+  ],
+  "author": "r0adkll",
+  "license": "MIT",
+  "dependencies": {
+    "@actions/core": "^1.9.0",
+    "@googleapis/androidpublisher": "^3.0.0",
+    "fast-glob": "^3.2.5"
+  },
+  "devDependencies": {
+    "@types/jest": "^28.1.2",
+    "@types/node": "^18.0.0",
+    "@vercel/ncc": "^0.34.0",
+    "jest": "^28.1.1",
+    "ts-jest": "^28.0.5",
+    "typescript": "^4.7.4"
+  }
+}
