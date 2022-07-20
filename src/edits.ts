@@ -73,7 +73,7 @@ export async function uploadToPlayStore(options: EditOptions, releaseFiles: stri
             });
             versionCodes.push(versionCode!);
         }
-        core.info(`Successfully uploaded ${versionCodes.length} artifacts`)
+        core.info(`Successfully uploaded ${versionCodes} artifacts`)
 
         // Add the uploaded artifacts to the Edit track
         core.info(`Adding ${versionCodes.length} artifacts to release on '${options.track}' track`)
