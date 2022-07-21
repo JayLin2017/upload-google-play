@@ -34,7 +34,7 @@ This action will help you upload an Android `.apk` or `.aab` (Android App Bundle
 The below example publishes `MyApp` to Google Play, targetting 33% (`0.33`) of users with a priority of `2`.
 
 ```yaml
-uses: r0adkll/upload-google-play@v1
+uses: JayLin8888/upload-google-play@v1.0.5
 with:
   serviceAccountJsonPlainText: ${{ SERVICE_ACCOUNT_JSON }}
   packageName: com.example.MyApp

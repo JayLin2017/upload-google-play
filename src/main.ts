@@ -76,7 +76,7 @@ async function run() {
 
         // Check release files while maintaining backward compatibility
         let validatedReleaseFiles: string[] = [];
-        if(versionCode.length == 0){
+        if(versionCode == undefined || versionCode.length == 0){
             if (releaseFiles.length == 0 && !releaseFile) {
                 core.setFailed(`You must provide either 'releaseFile' or 'releaseFiles' in your configuration.`);
                 return;
