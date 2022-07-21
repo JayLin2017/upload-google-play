@@ -28,6 +28,7 @@ export interface EditOptions {
     status?: string;
     changesNotSentForReview?: boolean;
     existingEditId?: string;
+    versionCode?: string;
 }
 
 export async function uploadToPlayStore(options: EditOptions, releaseFiles: string[]): Promise<string | undefined> {
@@ -65,13 +66,17 @@ export async function uploadToPlayStore(options: EditOptions, releaseFiles: stri
 
         // Upload artifacts to Google Play, and store their version codes
         const versionCodes = new Array<number>();
-        for (const releaseFile of releaseFiles) {
-            core.info(`Uploading ${releaseFile}`);
-            const versionCode = await uploadRelease(appEditId!, options, releaseFile).catch(reason => {
-                core.setFailed(reason);
-                return Promise.reject(reason);
-            });
-            versionCodes.push(versionCode!);
+        if(releaseFiles.length == 0){
+            versionCodes.push(parseInt(options.versionCode!));
+        }else{
+            for (const releaseFile of releaseFiles) {
+                core.info(`Uploading ${releaseFile}`);
+                const versionCode = await uploadRelease(appEditId!, options, releaseFile).catch(reason => {
+                    core.setFailed(reason);
+                    return Promise.reject(reason);
+                });
+                versionCodes.push(versionCode!);
+            }
         }
         core.info(`Successfully uploaded ${versionCodes} artifacts`)
 

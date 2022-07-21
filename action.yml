@@ -50,6 +50,9 @@ inputs:
   existingEditId:
     description: "The ID of an existing edit that has not been completed. If this is supplied, the action will append information to that rather than creating an edit"
     required: false
+  versionCode:
+    description: "Enter verison code"
+    required: false  
 outputs:
   internalSharingDownloadUrl:
     description: "The internal app sharing download url if track was 'internalsharing'"

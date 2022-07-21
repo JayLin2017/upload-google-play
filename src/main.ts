@@ -26,6 +26,7 @@ async function run() {
         const mappingFile = core.getInput('mappingFile', { required: false });
         const changesNotSentForReview = core.getInput('changesNotSentForReview', { required: false }) == 'true';
         const existingEditId = core.getInput('existingEditId')
+        const versionCode = core.getInput('versionCode')
 
         // Validate that we have a service account json in some format
         if (!serviceAccountJson && !serviceAccountJsonRaw) {
@@ -75,28 +76,29 @@ async function run() {
 
         // Check release files while maintaining backward compatibility
         let validatedReleaseFiles: string[] = [];
-        if (releaseFiles.length == 0 && !releaseFile) {
-            core.setFailed(`You must provide either 'releaseFile' or 'releaseFiles' in your configuration.`);
-            return;
-        } else if (releaseFiles.length == 0 && releaseFile) {
-            core.warning(`WARNING!! 'releaseFile' is deprecated and will be removed in a future release. Please migrate to 'releaseFiles'.`);
-            core.debug(`Validating ${releaseFile} exists`)
-            if (!fs.existsSync(releaseFile)) {
-                core.setFailed(`Unable to find release file @ ${releaseFile}`);
+        if(versionCode.length == 0){
+            if (releaseFiles.length == 0 && !releaseFile) {
+                core.setFailed(`You must provide either 'releaseFile' or 'releaseFiles' in your configuration.`);
                 return;
-            } else {
-                validatedReleaseFiles = [releaseFile];
+            } else if (releaseFiles.length == 0 && releaseFile) {
+                core.warning(`WARNING!! 'releaseFile' is deprecated and will be removed in a future release. Please migrate to 'releaseFiles'.`);
+                core.debug(`Validating ${releaseFile} exists`)
+                if (!fs.existsSync(releaseFile)) {
+                    core.setFailed(`Unable to find release file @ ${releaseFile}`);
+                    return;
+                } else {
+                    validatedReleaseFiles = [releaseFile];
+                }
+            } else if (releaseFiles.length > 0) {
+                core.debug(`Finding files ${releaseFiles.join(',')}`)
+                const files = await fg(releaseFiles);
+                if (!files.length) {
+                    core.setFailed(`Unable to find any release file @ ${releaseFiles.join(',')}`);
+                    return;
+                }
+                validatedReleaseFiles = files;
             }
-        } else if (releaseFiles.length > 0) {
-            core.debug(`Finding files ${releaseFiles.join(',')}`)
-            const files = await fg(releaseFiles);
-            if (!files.length) {
-                core.setFailed(`Unable to find any release file @ ${releaseFiles.join(',')}`);
-                return;
-            }
-            validatedReleaseFiles = files;
         }
-
         if (whatsNewDir != undefined && whatsNewDir.length > 0 && !fs.existsSync(whatsNewDir)) {
             core.setFailed(`Unable to find 'whatsnew' directory @ ${whatsNewDir}`);
             return
@@ -120,7 +122,8 @@ async function run() {
             mappingFile: mappingFile,
             name: releaseName,
             changesNotSentForReview: changesNotSentForReview,
-            existingEditId: existingEditId
+            existingEditId: existingEditId,
+            versionCode: versionCode
         }, validatedReleaseFiles);
 
         console.log(`Finished uploading to the Play Store: ${result}`)
