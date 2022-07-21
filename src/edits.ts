@@ -66,7 +66,9 @@ export async function uploadToPlayStore(options: EditOptions, releaseFiles: stri
 
         // Upload artifacts to Google Play, and store their version codes
         const versionCodes = new Array<number>();
-        if(options.versionCode == undefined || options.versionCode.length == 0){
+        if(options.versionCode != undefined && options.versionCode.length > 0){
+            versionCodes.push(parseInt(options.versionCode!));
+        }else{
             for (const releaseFile of releaseFiles) {
                 core.info(`Uploading ${releaseFile}`);
                 const versionCode = await uploadRelease(appEditId!, options, releaseFile).catch(reason => {
@@ -75,8 +77,6 @@ export async function uploadToPlayStore(options: EditOptions, releaseFiles: stri
                 });
                 versionCodes.push(versionCode!);
             }
-        }else{
-            versionCodes.push(parseInt(options.versionCode!));
         }
         core.info(`Successfully uploaded ${versionCodes} artifacts`)
 
