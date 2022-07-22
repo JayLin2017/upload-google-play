@@ -68,6 +68,7 @@ export async function uploadToPlayStore(options: EditOptions, releaseFiles: stri
         const versionCodes = new Array<number>();
         if(options.versionCode != undefined && options.versionCode.length > 0){
             versionCodes.push(parseInt(options.versionCode!));
+            core.info(`Successfully finded ${versionCodes} artifacts`)
         }else{
             for (const releaseFile of releaseFiles) {
                 core.info(`Uploading ${releaseFile}`);
@@ -77,8 +78,9 @@ export async function uploadToPlayStore(options: EditOptions, releaseFiles: stri
                 });
                 versionCodes.push(versionCode!);
             }
+
+            core.info(`Successfully uploaded ${versionCodes} artifacts`)
         }
-        core.info(`Successfully uploaded ${versionCodes} artifacts`)
 
         // Add the uploaded artifacts to the Edit track
         core.info(`Adding ${versionCodes.length} artifacts to release on '${options.track}' track`)
